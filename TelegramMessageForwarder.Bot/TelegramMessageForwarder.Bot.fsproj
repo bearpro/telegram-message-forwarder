@@ -8,7 +8,7 @@
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Repositories.fs" />
-    <Compile Include="Forwared.fs" />
+    <Compile Include="Forwarder.fs" />
     <Compile Include="Bot.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

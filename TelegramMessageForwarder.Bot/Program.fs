@@ -12,7 +12,7 @@ let log =
 let stateRepo = InMemoryStateRepository<int64>()
 let peerRepo = InMemoryPeerRepository<int64, Peer>();
 
-let client = Forwared.initTelegramClient(log)
+let client = Forwarder.initTelegramClient(log)
 client.Wait()
 
 let bot = Bot.getBot log stateRepo peerRepo client.Result

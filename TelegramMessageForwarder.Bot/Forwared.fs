@@ -1,4 +1,4 @@
-﻿module Forwared
+﻿module Forwarder
 
 open System
 open Serilog
@@ -36,30 +36,6 @@ open WTelegram
 open TL
 open System.Threading.Tasks
 
-let onUpdate (client: Client) (sourceChatId: int64) peers (arg: IObject) = 
-    task {
-        do! 
-            match arg with
-            | :? UpdatesBase as updates ->
-                // TODO Неправильно выбираются апдейты для пересылки.
-                if updates.Chats.ContainsKey(sourceChatId) then
-                    let soruceChat = updates.Chats[sourceChatId]
-                    task {
-                        let! history = client.Messages_GetHistory(soruceChat.ToInputPeer())
-                        let message = history.Messages[0] :?> Message
-                        for peer in peers do
-                            let! _ = client.Messages_ForwardMessages(
-                                InputPeer.Self,
-                                [| message.ID |],
-                                [| WTelegram.Helpers.RandomLong() |],
-                                peer)
-                            ()
-                        ()
-                    }
-                else Task.FromResult ()
-            | _ -> Task.FromResult ()
-    } :> Task
-
 let rec resolveAllPeers (client: Client) contacts = 
     task {
         match contacts with 
@@ -75,14 +51,25 @@ let rec resolveAllPeers (client: Client) contacts =
         | [] -> return []
     }
 
-let startForwardingUpdates (client: Client) sourceChatId peers = 
-    task {
-        let! cachedPeers = resolveAllPeers client peers
-        client.add_OnUpdate(onUpdate client sourceChatId cachedPeers)
-        ()
-    }
+let forwardUpdate (client: Client) (update: Telegram.Bot.Types.Update) contacts = 
+    if update.Message <> null then
+        task {
+            // TODO Кешировать пиры
+            let! botPeer = client.Contacts_ResolveUsername("bearpro_message_forwarder_bot")
+            let! history = client.Messages_GetHistory(botPeer, limit = 30)
+            let messageToForward = 
+                history.Messages 
+                |> Seq.find(fun x -> x.Date = update.Message.Date) 
+                :?> Message
 
-let stopForwardinUpdats (client: Client) =
-    // TODO
-    ()
-    
+            let! peers = resolveAllPeers client contacts
+
+            for peer in peers do
+                let! _ = client.Messages_ForwardMessages(
+                    InputPeer.Self,
+                    Array.singleton messageToForward.ID,
+                    Array.singleton (WTelegram.Helpers.RandomLong()),
+                    peer)
+                ()
+        }
+    else Task.FromResult ()

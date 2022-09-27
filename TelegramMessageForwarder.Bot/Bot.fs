@@ -20,20 +20,22 @@ let getBot
 
     let botClient = new TelegramBotClient(token)
 
-    //let handleUpdateToForward (botClient: ITelegramBotClient) (update: Update) = 
-    //    async {
-    //        let userId = update.Message.From.Id
-    //        let! peers = peerRepo.GetPeers(userId) 
-    //        let peers = peers |> Seq.toList
-    //        let peerCount = peers |> Seq.length
-    //        let! _ = Forwared.startForwardingUpdates telegramClient update.Message.Chat.Id peers |> Async.AwaitTask
-    //        let! _ = 
-    //            botClient.SendTextMessageAsync(update.Message.Chat.Id, $"Сообщение переслано {peerCount} контактам.") 
-    //            |> Async.AwaitTask
-    //        ()
-    //    }
+    let handleUpdateToForward (botClient: ITelegramBotClient) (update: Update) = 
+        async {
+            let userId = update.Message.From.Id
+            let! peers = peerRepo.GetPeers(userId) 
+            let peers = peers |> Seq.toList
+            let peerCount = peers |> Seq.length
+            do! Forwarder.forwardUpdate telegramClient update peers |> Async.AwaitTask
+            // NOTE Не факт что это нужно
+            let! _ = 
+                botClient.SendTextMessageAsync(update.Message.Chat.Id, $"Сообщение переслано {peerCount} контактам.") 
+                |> Async.AwaitTask
+            ()
+        }
     
     let handleNewPeer (client: ITelegramBotClient) (update: Update) = 
+        // TODO Добавлять ботов и группы
         async {
             if (not (isNull update.Message) && not (isNull update.Message.Contact)) then
                 do! peerRepo.RegisterPeer update.Message.From.Id (Peer.Contact update.Message.Contact)
@@ -94,10 +96,6 @@ let getBot
 
             elif (currentState = SetPeers && update.Message.Text = "/stop_set_peers") then
                 do! stateRepo.SetState senderId Enabled
-                let! peers = peerRepo.GetPeers(update.Message.From.Id)
-                let! _ = 
-                    Forwared.startForwardingUpdates telegramClient update.Message.Chat.Id (Seq.toList peers)
-                    |> Async.AwaitTask
                 let! _ = 
                     client.SendTextMessageAsync(update.Message.Chat.Id, 
                         "Все сообщения кроме команд будут пересланы указанным пользователям") 
@@ -108,8 +106,7 @@ let getBot
                 do! handleListPeers client update
 
             elif (currentState = Enabled) then 
-                //do! handleUpdateToForward client update
-                ()
+                do! handleUpdateToForward client update
 
             elif (currentState = SetPeers) then 
                 do! handleNewPeer client update 

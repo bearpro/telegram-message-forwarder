@@ -1,0 +1,54 @@
+<mxfile host="65bd71144e">
+    <diagram id="VbYFhV-Uw6ufQUklBUGd" name="Бот">
+        <mxGraphModel dx="891" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-4" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="-FFThEvsuup6BrA3Ykzs-1" target="-FFThEvsuup6BrA3Ykzs-3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-1" value="Контакты пользователей/ботов" style="shape=message;html=1;whiteSpace=wrap;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="10" y="300" width="90" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-5" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="-FFThEvsuup6BrA3Ykzs-2" target="-FFThEvsuup6BrA3Ykzs-3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-2" value="Любое сообщение" style="shape=message;html=1;whiteSpace=wrap;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="390" width="90" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-7" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="-FFThEvsuup6BrA3Ykzs-3" target="-FFThEvsuup6BrA3Ykzs-6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-9" value="Сообщение +&lt;br&gt;список контактов" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="-FFThEvsuup6BrA3Ykzs-3" target="-FFThEvsuup6BrA3Ykzs-8">
+                    <mxGeometry y="20" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-3" value="Бот" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="190" y="350" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-6" value="Хранилище контактов для рассылки" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+                    <mxGeometry x="205" y="210" width="90" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-8" value="API" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="430" y="350" width="40" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-16" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="-FFThEvsuup6BrA3Ykzs-10" target="-FFThEvsuup6BrA3Ykzs-15">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-10" value="Telegram-клиент без фронтенда" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="350" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-14" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="-FFThEvsuup6BrA3Ykzs-13" target="-FFThEvsuup6BrA3Ykzs-10">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-13" value="Авторизация тогоже пользователя" style="shape=message;html=1;whiteSpace=wrap;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="480" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="-FFThEvsuup6BrA3Ykzs-15" value="Пересылка сообщения всем контактам от имени тогоже пользователя" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="1">
+                    <mxGeometry x="630" y="350" width="170" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,5 @@
+obj/
+bin/
+.fake
+launchSettings.json
+.vs/

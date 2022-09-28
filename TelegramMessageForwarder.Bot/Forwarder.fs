@@ -38,12 +38,24 @@ open System.Threading.Tasks
 
 let rec resolveAllPeers (client: Client) contacts = 
     task {
+        let! allChats = client.Messages_GetAllChats()
+
         match contacts with 
-        | h :: t -> 
+        | peerInfo :: t -> 
             let! peer = 
-                match h with
+                match peerInfo with
                 | Types.Peer.Contact contact -> task {
                     let! contactPeer = client.Contacts_ResolvePhone(contact.PhoneNumber)
+                    return InputPeerUser(contactPeer.User.ID, contactPeer.User.access_hash) :> InputPeer
+                    }
+                | Types.Peer.Channel title -> task {
+                    let chat = 
+                        allChats.chats.Values 
+                        |> Seq.find(fun x -> x.Title = title)
+                    return chat.ToInputPeer()
+                    }
+                | Types.Peer.Username username -> task {
+                    let! contactPeer = client.Contacts_ResolveUsername(username)
                     return InputPeerUser(contactPeer.User.ID, contactPeer.User.access_hash) :> InputPeer
                     }
             let! restPeers = resolveAllPeers client t
@@ -59,7 +71,8 @@ let forwardUpdate (client: Client) (update: Telegram.Bot.Types.Update) contacts 
             let! history = client.Messages_GetHistory(botPeer, limit = 30)
             let messageToForward = 
                 history.Messages 
-                |> Seq.find(fun x -> x.Date = update.Message.Date) 
+                // TODO Проверить эту логику
+                |> Seq.find(fun x -> x.Date = update.Message.Date && x.From <> null && x.From.ID <> botPeer.peer.ID) 
                 :?> Message
 
             let! peers = resolveAllPeers client contacts

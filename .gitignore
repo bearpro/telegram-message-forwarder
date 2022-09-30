@@ -3,3 +3,5 @@ bin/
 .fake
 launchSettings.json
 .vs/
+/secrets/*
+!/secrets/.gitkeep

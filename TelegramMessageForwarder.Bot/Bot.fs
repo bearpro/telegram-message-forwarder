@@ -163,7 +163,7 @@ let getBot
         log.Error(e, "Polling error")
         Task.CompletedTask)
     
-    let wait = task {
+    let botClient = task {
         do! botClient.SetMyCommandsAsync(seq {
             BotCommand(Command = "/start", Description = "Запускает бота")
             BotCommand(Command = "/set_peers", Description = "Переходит в режим сохранения контактов")
@@ -175,8 +175,8 @@ let getBot
         do (botClient.StartReceiving(handleUpdateFunc, errorHandlerFunc))
     
         let! me = botClient.GetMeAsync()
-        Console.WriteLine($"Start listening for @{me.Username}")
-        Console.ReadLine() |> ignore
+        log.Information $"Start listening for @{me.Username}"
+        return botClient
     }
 
-    wait
+    botClient

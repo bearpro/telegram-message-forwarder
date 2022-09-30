@@ -1,20 +1,35 @@
-﻿open Serilog
+﻿open System
+open System.Threading
+open Serilog
 open Telegram.Bot
 open Types
 open Repositories
 
-let log = 
-    (new LoggerConfiguration())
-        .WriteTo.Console()
-        .WriteTo.File("log.txt")
-        .CreateLogger()
+let main = async {
+    let log = 
+        (new LoggerConfiguration())
+            .WriteTo.Console()
+            .CreateLogger()
 
-let stateRepo = InMemoryStateRepository<int64>()
-let peerRepo = InMemoryPeerRepository<int64, Peer>();
+    let stateRepo = InMemoryStateRepository<int64>()
+    let peerRepo = InMemoryPeerRepository<int64, Peer>();
 
-let client = Forwarder.initTelegramClient(log)
-client.Wait()
+    use! client =  Forwarder.initTelegramClient(log) |> Async.AwaitTask
 
-let bot = Bot.getBot log stateRepo peerRepo client.Result
-bot.Wait()
+    let! bot = Bot.getBot log stateRepo peerRepo client |> Async.AwaitTask
 
+    ignore bot
+
+    use mre = new ManualResetEventSlim()
+
+    let handleStop _ _ = 
+        log.Information "Stopping..."
+        mre.Set()
+
+    ConsoleCancelEventHandler handleStop
+    |> Console.CancelKeyPress.AddHandler
+
+    mre.Wait()
+}
+
+Async.RunSynchronously main

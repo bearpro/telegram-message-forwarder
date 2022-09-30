@@ -16,20 +16,20 @@ let main = async {
 
     use! client =  Forwarder.initTelegramClient(log) |> Async.AwaitTask
 
-    let! bot = Bot.getBot log stateRepo peerRepo client |> Async.AwaitTask
+    let! bot = Bot.initBotClient log stateRepo peerRepo client |> Async.AwaitTask
 
     ignore bot
 
-    use mre = new ManualResetEventSlim()
+    use mre = new ManualResetEvent(false)
 
     let handleStop _ _ = 
-        log.Information "Stopping..."
-        mre.Set()
+        mre.Set() |> ignore
 
     ConsoleCancelEventHandler handleStop
     |> Console.CancelKeyPress.AddHandler
 
-    mre.Wait()
+    mre.WaitOne(-1, false) |> ignore
+    log.Information "Stopping..."
 }
 
 Async.RunSynchronously main

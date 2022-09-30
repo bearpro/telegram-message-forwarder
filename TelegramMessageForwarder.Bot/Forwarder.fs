@@ -2,6 +2,7 @@
 
 open System
 open Serilog
+open System.IO
 
 let writeWtelegramLog (log: ILogger) level message =
     match level with
@@ -14,21 +15,24 @@ let writeWtelegramLog (log: ILogger) level message =
     | _ -> log.Error message
 
 let initTelegramClient (log: ILogger) = task {
+    WTelegram.Helpers.Log <- (Action<int, string>(writeWtelegramLog log))
+    
     let apiId = Environment.GetEnvironmentVariable("TG_CLIENT_API_ID")
     let apiHash = Environment.GetEnvironmentVariable("TG_CLIENT_API_HASH")
     let phoneNumber = Environment.GetEnvironmentVariable("TG_PHONE_NUMBER")
-    log.Information("Initializing client...")
-    let client = new WTelegram.Client(fun key -> 
-            match key with
+    
+    let config key =
+        match key with
             | "api_id" -> apiId
             | "api_hash" -> apiHash
             | "phone_number" -> phoneNumber
-            | _ -> null)
+            | "session_pathname" -> null
+            | _ -> null
 
-    WTelegram.Helpers.Log <- (Action<int, string>(writeWtelegramLog log))
-
+    let client = new WTelegram.Client(config)
+    
     let! user = client.LoginUserIfNeeded()
-    log.Information($"User authorized, {user.first_name} {user.last_name}")
+    log.Information($"Client authorized, {user.first_name} {user.last_name}")
     return client
     }
 

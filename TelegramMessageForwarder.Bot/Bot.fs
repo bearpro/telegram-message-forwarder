@@ -10,7 +10,7 @@ open Types
 open Repositories
 open System.Text
 
-let getBot 
+let initBotClient 
     (log : ILogger) 
     (stateRepo: IStateRepository<int64>)
     (peerRepo: IPeerRepository<int64, Peer>)

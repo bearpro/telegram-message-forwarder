@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Telegram.Bot" Version="18.0.0" />
-    <PackageReference Include="WTelegramClient" Version="2.6.4" />
+    <PackageReference Include="WTelegramClient" Version="4.3.7" />
   </ItemGroup>
 
 </Project>
